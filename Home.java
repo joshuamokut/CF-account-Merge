@@ -296,29 +296,38 @@ public class Home extends JFrame{
 					
 						for(int i=0; i<index; i++) {
 							subarr[i]=getSubs(users[i]);
+							System.out.println(subarr[i].getJSONArray("result").length());
+
 						}
 						
 						JSONObject probs=getProbs();
 						for(int i=0; i<probs.getJSONObject("result").getJSONArray("problems").length(); i++) {
 							JSONObject temp=probs.getJSONObject("result").getJSONArray("problems").getJSONObject(i);
+							try {
+								temp.getInt("rating");
+							}
+							catch(Exception e)
+							{
+								continue;
+							}
 							if (temp.getInt("rating")!=Integer.parseInt(minRating.getText())) {
 								continue;
 							}
-
 							Boolean ok=true;
-							for(int j=0; (j<index )&& ok; j++) {
+							
+							for(int j=0; (j<index) && ok; j++) {
 								
 								for(int k=0; k<subarr[j].getJSONArray("result").length(); k++) {
+									System.out.println(k);
+
 									JSONObject temp1=subarr[j].getJSONArray("result").getJSONObject(k);
-									
+									System.out.println(temp1);
+
 									if (temp1.getString("verdict").equals("OK")) {
-										if (temp1.getJSONObject("problem").get("index").equals(temp.get("index")) && (temp1.getJSONObject("problem").getInt("contestId") ==temp.getInt("contestId"))) {
+										if (temp1.getJSONObject("problem").getString("name").equals(temp.getString("name"))) {
 											ok=false;
 											break;
-										}
-												
-											
-										
+										}										
 									}
 								}
 							}
@@ -334,7 +343,7 @@ public class Home extends JFrame{
 						
 					}
 					catch(Exception e){
-						lbl5.setText("Something went wrong");
+						lbl5.setText("Something went wrong2");
 					}
 					
 				}
