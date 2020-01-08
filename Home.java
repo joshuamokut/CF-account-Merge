@@ -31,17 +31,21 @@ public class Home extends JFrame{
 	private static JTextField maxRating=new JTextField();
 	private static JButton resetButton=new JButton();
 	private static JButton enterButton=new JButton();
-	private static JButton openLink=new JButton("Open Problem");
 	private static JLabel lbl1=new JLabel("Enter first account handle");
 	private static JLabel lbl2=new JLabel("Enter second account handle");
 	private static JLabel lbl3=new JLabel("Enter Minimum Rating");
-	private static JLabel lbl4=new JLabel("Enter Maximum Rating");
+	private static JLabel lbl4=new JLabel("Ignore this I'll get rid of it later");
 	public static GridLayout grid;
-	private static JLabel lbl5 =new JLabel();
-	private static int index=0;
-	private String users[]=new String[10];
-	private String url="";
 	
+	private static JLabel lbl5 =new JLabel();
+	private static JLabel lbl5a =new JLabel();
+	private static JLabel lbl[] =new JLabel[5];
+	private static JButton openLink[]=new JButton[5];
+	private String users[]=new String[10];
+
+	private static int index=0;
+	private String url[]=new String [5];
+
 	
 	
 	public Home() throws HeadlessException{
@@ -51,18 +55,34 @@ public class Home extends JFrame{
 		
 		
 		grid=new GridLayout(4, 2, 5, 5);
-		
+		GridLayout grid1=new GridLayout(5, 1, 2, 2);
 		firstNick.setLayout(new FlowLayout());
 		secondNick.setLayout(new FlowLayout());
 		minRating.setLayout(new FlowLayout());
 		maxRating.setLayout(new FlowLayout());
+		
+		lbl5.setLayout(grid1);
+		
+		for(int i=0; i<5; i++) {
+			lbl[i]=new JLabel();
+			lbl5.add(lbl[i]);
+		}
+		
+		lbl5a.setLayout(grid1);
+		
+		for(int i=0; i<5; i++) {
+			openLink[i]=new JButton();
+			lbl5a.add(openLink[i]);
+		}
+		
+		
 		resetButton.setText("RESET");
 		enterButton.setText("ENTER");
 		
 		firstNick.add(lbl1);
 		secondNick.add(lbl2);
 		minRating.add(lbl3);
-		maxRating.add(lbl4);
+		maxRating.setText("0");
 		
 		firstNick.addKeyListener(new KeyAdapter() {
 
@@ -149,9 +169,9 @@ public class Home extends JFrame{
 		this.getContentPane().add(resetButton);
 		this.getContentPane().add(enterButton);
 		this.getContentPane().add(lbl5);
-		this.getContentPane().add(openLink);
+		this.getContentPane().add(lbl5a);
 		
-		openLink.addActionListener(new ActionListener() {
+		openLink[0].addActionListener(new ActionListener() {
 			private void open(URI uri) {
 				if (Desktop.isDesktopSupported()) {
 					try {
@@ -165,7 +185,95 @@ public class Home extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					open(new URI(url));
+					open(new URI(url[0]));
+				} catch (URISyntaxException e) {
+					e.printStackTrace();
+				}
+			}
+			
+		});
+		
+		openLink[1].addActionListener(new ActionListener() {
+			private void open(URI uri) {
+				if (Desktop.isDesktopSupported()) {
+					try {
+						Desktop.getDesktop().browse(uri);
+					}catch(Exception e) {
+						lbl5.setText("Oops, an error has occured");
+					}
+				}
+			}
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					open(new URI(url[1]));
+				} catch (URISyntaxException e) {
+					e.printStackTrace();
+				}
+			}
+			
+		});
+		
+		openLink[2].addActionListener(new ActionListener() {
+			private void open(URI uri) {
+				if (Desktop.isDesktopSupported()) {
+					try {
+						Desktop.getDesktop().browse(uri);
+					}catch(Exception e) {
+						lbl5.setText("Oops, an error has occured");
+					}
+				}
+			}
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					open(new URI(url[2]));
+				} catch (URISyntaxException e) {
+					e.printStackTrace();
+				}
+			}
+			
+		});
+		
+		openLink[3].addActionListener(new ActionListener() {
+			private void open(URI uri) {
+				if (Desktop.isDesktopSupported()) {
+					try {
+						Desktop.getDesktop().browse(uri);
+					}catch(Exception e) {
+						lbl5.setText("Oops, an error has occured");
+					}
+				}
+			}
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					open(new URI(url[3]));
+				} catch (URISyntaxException e) {
+					e.printStackTrace();
+				}
+			}
+			
+		});
+		
+		openLink[4].addActionListener(new ActionListener() {
+			private void open(URI uri) {
+				if (Desktop.isDesktopSupported()) {
+					try {
+						Desktop.getDesktop().browse(uri);
+					}catch(Exception e) {
+						lbl5.setText("Oops, an error has occured");
+					}
+				}
+			}
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					open(new URI(url[4]));
 				} catch (URISyntaxException e) {
 					e.printStackTrace();
 				}
@@ -291,59 +399,70 @@ public class Home extends JFrame{
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
 				if (validate()) {
+					for(int i=0; i<5; i++) {
+						openLink[i].setText("Open Problem "+Integer.toString(Integer.parseInt(minRating.getText())+i*100));
+					}
+					
 					try{
 						JSONObject subarr[]=new JSONObject[2];
 					
 						for(int i=0; i<index; i++) {
 							subarr[i]=getSubs(users[i]);
-							System.out.println(subarr[i].getJSONArray("result").length());
 
 						}
 						
 						JSONObject probs=getProbs();
-						for(int i=0; i<probs.getJSONObject("result").getJSONArray("problems").length(); i++) {
-							JSONObject temp=probs.getJSONObject("result").getJSONArray("problems").getJSONObject(i);
-							try {
-								temp.getInt("rating");
-							}
-							catch(Exception e)
-							{
-								continue;
-							}
-							if (temp.getInt("rating")!=Integer.parseInt(minRating.getText())) {
-								continue;
-							}
-							Boolean ok=true;
-							
-							for(int j=0; (j<index) && ok; j++) {
-								
-								for(int k=0; k<subarr[j].getJSONArray("result").length(); k++) {
-									System.out.println(k);
+						for(int diff=0; diff<500; diff+=100) {
+							Boolean ok1=false;
 
-									JSONObject temp1=subarr[j].getJSONArray("result").getJSONObject(k);
-									System.out.println(temp1);
+							for(int i=0; i<probs.getJSONObject("result").getJSONArray("problems").length(); i++) {
+								JSONObject temp=probs.getJSONObject("result").getJSONArray("problems").getJSONObject(i);
+								try {
+									temp.getInt("rating");
+								}
+								catch(Exception e)
+								{
+									continue;
+								}
+								if (temp.getInt("rating")!=Integer.parseInt(minRating.getText())+diff) {
+									continue;
+								}
+								Boolean ok=true;
 
-									if (temp1.getString("verdict").equals("OK")) {
-										if (temp1.getJSONObject("problem").getString("name").equals(temp.getString("name"))) {
-											ok=false;
-											break;
-										}										
+								for(int j=0; (j<index) && ok; j++) {
+									
+									for(int k=0; k<subarr[j].getJSONArray("result").length(); k++) {
+
+										JSONObject temp1=subarr[j].getJSONArray("result").getJSONObject(k);
+											
+										
+										if (temp1.getString("verdict").equals("OK")) {
+											if (temp1.getJSONObject("problem").getString("name").equals(temp.getString("name"))) {
+												ok=false;
+												break;
+											}										
+										}
 									}
 								}
+								if (ok) {
+									url[diff/100]="https://codeforces.com/problemset/problem/"+Integer.toString(temp.getInt("contestId"))+
+											"/"+temp.getString("index");
+									lbl[diff/100].setText(url[diff/100]);
+									ok1=true;
+									break;
+								}
+								
 							}
-							if (ok) {
-								url="https://codeforces.com/problemset/problem/"+Integer.toString(temp.getInt("contestId"))+
-										"/"+temp.getString("index");
-								lbl5.setText(url);
-								return;
-							}
-							
+							if (!ok1)
+								lbl[diff/100].setText("nothing found");
+
 						}
-						lbl5.setText("nothing found");
-						
 					}
 					catch(Exception e){
-						lbl5.setText("Something went wrong2");
+						for(int i=0; i<5; i++) {
+							lbl[i].setText("Something went wrong");
+
+						}
 					}
 					
 				}
@@ -370,6 +489,11 @@ public class Home extends JFrame{
 				
 				lbl5.setText("");
 				index=0;
+				
+				for(int i=0; i<5; i++) {
+					lbl[i].setText("");
+					openLink[i].setText("");
+				}
 			}
 			
 		});
